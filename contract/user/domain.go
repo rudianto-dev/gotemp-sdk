@@ -1,5 +1,6 @@
 package user
 
+// USER DOMAIN
 type CreateUser struct {
 	Name string
 }

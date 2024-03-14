@@ -31,10 +31,10 @@ type (
 		Message   string      `json:"message"`
 	}
 	Error struct {
-		Code    int               `json:"code"`
-		Message string            `json:"message"`
-		Reasons map[string]string `json:"reasons"`
-		Details []interface{}     `json:"details,omitempty"`
+		Code    utils.BusinessCode `json:"code"`
+		Message string             `json:"message"`
+		Reasons map[string]string  `json:"reasons"`
+		Details []interface{}      `json:"details,omitempty"`
 	}
 )
 
@@ -98,17 +98,18 @@ func Nay(w http.ResponseWriter, r *http.Request, err error, details ...interface
 
 	// map error to http status header
 	httpStatus := http.StatusInternalServerError
-	businessCode := 0
+	businessCode := utils.Undefine
 	// handle validator error catch
 	reasons := utils.GetValidatorFieldError(err)
 	if len(reasons) > 0 {
 		err = utils.ErrBadRequest
 	}
 	// handle business error catch
-	if val, ok := utils.ErrorMapper[err]; ok {
-		httpStatus = val.HttpStatusCode
-		businessCode = val.BusinessErrorCode
-		message = val.Origin.Error()
+	if val, ok := utils.BusinessToError[err]; ok {
+		bm := utils.GetStatusMessage(val)
+		businessCode = val
+		message = bm.Message
+		httpStatus = bm.HttpStatusCode
 	}
 	render.Status(r, httpStatus)
 	_ = render.Render(w, r, &Response{

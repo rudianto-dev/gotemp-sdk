@@ -32,7 +32,6 @@ func translateOverride() ut.Translator {
 }
 
 func GetValidatorFieldError(err error) map[string]string {
-
 	translator := translateOverride()
 	result := map[string]string{}
 	if _, ok := err.(*validator.InvalidValidationError); ok {
