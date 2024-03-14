@@ -7,7 +7,23 @@ import (
 	"net/http"
 
 	userContract "github.com/rudianto-dev/gotemp-sdk/contract/user"
+	utilContract "github.com/rudianto-dev/gotemp-sdk/contract/util"
 )
+
+func (s *Service) Health(ctx context.Context) (res *utilContract.GetHealthResponse, err error) {
+	route := "/health"
+	execute, err := s.tp.Execute(ctx, http.MethodGet, route, nil)
+	if err != nil {
+		return
+	}
+	var contentByte []byte
+	contentByte, err = json.Marshal(&execute.Content)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(contentByte, &res)
+	return
+}
 
 func (s *Service) GetDetail(ctx context.Context, req userContract.GetDetailUserRequest) (res *userContract.GetDetailUserResponse, err error) {
 	route := fmt.Sprintf("/v1/user/%s", req.ID)
@@ -24,18 +40,18 @@ func (s *Service) GetDetail(ctx context.Context, req userContract.GetDetailUserR
 	return
 }
 
-func (s *Service) GetList(ctx context.Context, req userContract.GetListUserRequest) (*userContract.GetListUserResponse, error) {
-	return nil, nil
+func (s *Service) GetList(ctx context.Context, req userContract.GetListUserRequest) (res *userContract.GetListUserResponse, err error) {
+	return &userContract.GetListUserResponse{}, nil
 }
 
-func (s *Service) CreateUser(ctx context.Context, req userContract.CreateUserRequest) (*userContract.CreateUserResponse, error) {
-	return nil, nil
+func (s *Service) CreateUser(ctx context.Context, req userContract.CreateUserRequest) (res *userContract.CreateUserResponse, err error) {
+	return &userContract.CreateUserResponse{}, nil
 }
 
-func (s *Service) UpdateUser(ctx context.Context, req userContract.UpdateUserRequest) (*userContract.UpdateUserResponse, error) {
-	return nil, nil
+func (s *Service) UpdateUser(ctx context.Context, req userContract.UpdateUserRequest) (res *userContract.UpdateUserResponse, err error) {
+	return &userContract.UpdateUserResponse{}, nil
 }
 
-func (s *Service) DeleteUser(ctx context.Context, req userContract.DeleteUserRequest) (*userContract.DeleteUserResponse, error) {
-	return nil, nil
+func (s *Service) DeleteUser(ctx context.Context, req userContract.DeleteUserRequest) (res *userContract.DeleteUserResponse, err error) {
+	return &userContract.DeleteUserResponse{}, nil
 }
