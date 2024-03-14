@@ -1,5 +1,6 @@
 package user
 
+// USER USE-CASE
 type UserRequest struct {
 	Name string `json:"name" validate:"required"`
 }
@@ -10,18 +11,18 @@ type UserResponse struct {
 	CreatedAt int64  `json:"created_at"`
 }
 
-type GetProfileRequest struct {
+type GetDetailUserRequest struct {
 	ID string `json:"id" validate:"required"`
 }
 
-type GetProfileResponse struct {
+type GetDetailUserResponse struct {
 	User UserResponse `json:"user"`
 }
 
-type GetListRequest struct {
+type GetListUserRequest struct {
 }
 
-type GetListResponse struct {
+type GetListUserResponse struct {
 	Users []UserResponse `json:"users"`
 }
 
@@ -49,3 +50,5 @@ type DeleteUserRequest struct {
 type DeleteUserResponse struct {
 	User UserResponse `json:"user"`
 }
+
+// ROLE USE-CASE

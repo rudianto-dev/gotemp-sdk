@@ -8,11 +8,12 @@ import (
 	"net/http"
 
 	"github.com/pkg/errors"
+	"github.com/rudianto-dev/gotemp-sdk/pkg/utils"
 )
 
-type HTTPTransporter struct {
+type HttpTransporter struct {
 	hc       *http.Client
-	url, uid string
+	uid, url string
 }
 
 const (
@@ -20,26 +21,36 @@ const (
 )
 
 func NewHTTPTransporter(client *http.Client, uid, url string) IHttpTransporter {
-	return &HTTPTransporter{client, uid, url}
+	return &HttpTransporter{client, uid, url}
 }
 
-func (tp HTTPTransporter) Execute(ctx context.Context, method, url, token string, payload interface{}) (resp *Response, err error) {
+func (tp HttpTransporter) Execute(ctx context.Context, method, route string, payload interface{}) (resp *Response, err error) {
+	url := tp.url + route
 	resp, err = tp.talk(method, url, "", payload)
 	if err != nil {
+		return
+	}
+	if resp.Status >= 400 {
+		err = tp.parseHttpError(resp.Error)
 		return
 	}
 	return
 }
 
-func (tp HTTPTransporter) ExecuteWithToken(ctx context.Context, method, url, token string, payload interface{}) (resp *Response, err error) {
+func (tp HttpTransporter) ExecuteWithToken(ctx context.Context, method, route, token string, payload interface{}) (resp *Response, err error) {
+	url := tp.url + route
 	resp, err = tp.talk(method, url, "", payload)
 	if err != nil {
+		return
+	}
+	if resp.Status >= 400 {
+		err = tp.parseHttpError(resp.Error)
 		return
 	}
 	return
 }
 
-func (tp *HTTPTransporter) talk(method, url, token string, payload interface{}) (*Response, error) {
+func (tp *HttpTransporter) talk(method, url, token string, payload interface{}) (*Response, error) {
 	var ir io.Reader
 	if nil != payload {
 		b, err := json.Marshal(payload)
@@ -55,7 +66,7 @@ func (tp *HTTPTransporter) talk(method, url, token string, payload interface{}) 
 	return tp.request(r)
 }
 
-func (tp *HTTPTransporter) build(method, url, token string, payload io.Reader) (*http.Request, error) {
+func (tp *HttpTransporter) build(method, url, token string, payload io.Reader) (*http.Request, error) {
 	r, err := http.NewRequest(method, url, payload)
 	if err != nil {
 		return nil, errors.WithMessage(err, "failed creating request")
@@ -72,8 +83,7 @@ func (tp *HTTPTransporter) build(method, url, token string, payload io.Reader) (
 	return r, nil
 }
 
-func (tp *HTTPTransporter) request(r *http.Request) (*Response, error) {
-
+func (tp *HttpTransporter) request(r *http.Request) (*Response, error) {
 	resp, err := tp.hc.Do(r)
 	if err != nil {
 		return nil, errors.WithMessage(err, "failed communicating with upstream")
@@ -92,4 +102,13 @@ func (tp *HTTPTransporter) request(r *http.Request) (*Response, error) {
 	}
 
 	return &rs, nil
+}
+
+func (s *HttpTransporter) parseHttpError(err *ErrorResponse) error {
+	// handle business error catch
+	if val, ok := utils.ErrorToBusiness[utils.BusinessCode(err.Code)]; ok {
+		return val
+	}
+	bm := utils.GetStatusMessage(utils.BusinessCode(err.Code))
+	return errors.New(bm.Message)
 }

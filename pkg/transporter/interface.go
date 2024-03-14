@@ -10,13 +10,14 @@ type (
 	}
 	Response struct {
 		RequestID string                 `json:"request_id"`
-		Status    int                    `json:"status"`
 		Content   map[string]interface{} `json:"content,omitempty"`
+		Status    int                    `json:"status"`
+		Message   string                 `json:"message"`
 		Error     *ErrorResponse         `json:"error,omitempty"`
 	}
 )
 
 type IHttpTransporter interface {
-	Execute(ctx context.Context, method, url, token string, payload interface{}) (resp *Response, err error)
-	ExecuteWithToken(ctx context.Context, method, url, token string, payload interface{}) (resp *Response, err error)
+	Execute(ctx context.Context, method, route string, payload interface{}) (resp *Response, err error)
+	ExecuteWithToken(ctx context.Context, method, route, token string, payload interface{}) (resp *Response, err error)
 }
