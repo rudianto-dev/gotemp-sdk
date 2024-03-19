@@ -120,19 +120,22 @@ func (db *DB) checkingConnection() {
 	}
 }
 
-func (db *DB) Close() {
+func (db *DB) Close() error {
 	if db.IsStopCheckConnection != nil {
 		// stop check connection
 		close(db.IsStopCheckConnection)
 	}
 
 	if db.Master != nil {
-		db.Master.Close()
+		err := db.Master.Close()
+		return err
 	}
 
 	if db.Slave != nil {
-		db.Slave.Close()
+		err := db.Slave.Close()
+		return err
 	}
+	return nil
 }
 
 func (db *DB) GetMasterConnection() (*sqlx.DB, error) {
