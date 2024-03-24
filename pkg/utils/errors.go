@@ -55,8 +55,10 @@ var (
 	ErrUsernameAlreadyRegistered ErrorType = errors.New("username already registered")
 	ErrGenerateOTP               ErrorType = errors.New("error while generate otp")
 	ErrExpiredOTP                ErrorType = errors.New("otp not valid or has been expired")
+	ErrExpiredVerificationOTP    ErrorType = errors.New("otp verification not valid or has been expired")
 	ErrInvalidOTP                ErrorType = errors.New("invalid otp code")
 	ErrRepositoryOTP             ErrorType = errors.New("otp repository internal error")
+	ErrInvalidCredential         ErrorType = errors.New("wrong username or password")
 )
 
 var (
@@ -73,6 +75,9 @@ var (
 		ErrQueryTxCommit:             QueryTxCommitInvalid,
 		ErrInvalidContentType:        ContentTypeInvalid,
 		ErrUsernameAlreadyRegistered: UsernameAlreadyRegistered,
+		ErrInvalidCredential:         InvalidCredential,
+		ErrExpiredOTP:                ExpireOTP,
+		ErrExpiredVerificationOTP:    ExpireOTPVerification,
 	}
 
 	ErrorToBusiness = map[BusinessCode]ErrorType{
@@ -87,5 +92,8 @@ var (
 		QueryTxDeleteInvalid:      ErrQueryTxDelete,
 		QueryTxCommitInvalid:      ErrQueryTxCommit,
 		UsernameAlreadyRegistered: ErrUsernameAlreadyRegistered,
+		InvalidCredential:         ErrInvalidCredential,
+		ExpireOTP:                 ErrExpiredOTP,
+		ExpireOTPVerification:     ErrExpiredVerificationOTP,
 	}
 )

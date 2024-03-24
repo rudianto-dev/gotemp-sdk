@@ -24,6 +24,9 @@ const (
 	QueryTxCommitInvalid      BusinessCode = 466
 	ContentTypeInvalid        BusinessCode = 467
 	UsernameAlreadyRegistered BusinessCode = 468
+	InvalidCredential         BusinessCode = 469
+	ExpireOTP                 BusinessCode = 470
+	ExpireOTPVerification     BusinessCode = 471
 	Undefine                  BusinessCode = 499
 	InternalError             BusinessCode = 500
 	BadGateway                BusinessCode = 502
@@ -58,6 +61,9 @@ var BusinessStatusMessage = map[BusinessCode]BusinessStatusCode{
 	Undefine:                  {Message: "something went wrong", HttpStatusCode: http.StatusInternalServerError},
 	InternalError:             {Message: "internal server error", HttpStatusCode: http.StatusInternalServerError},
 	BadGateway:                {Message: "bad gateway", HttpStatusCode: http.StatusBadGateway},
+	InvalidCredential:         {Message: "wrong username or password", HttpStatusCode: http.StatusBadRequest},
+	ExpireOTP:                 {Message: "otp not valid or has been expired", HttpStatusCode: http.StatusBadRequest},
+	ExpireOTPVerification:     {Message: "otp verification not valid or has been expired", HttpStatusCode: http.StatusBadRequest},
 	ServiceUnavailable:        {Message: "service unavailable", HttpStatusCode: http.StatusServiceUnavailable},
 }
 
