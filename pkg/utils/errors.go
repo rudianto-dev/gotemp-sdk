@@ -58,7 +58,9 @@ var (
 	ErrExpiredVerificationOTP    ErrorType = errors.New("otp verification not valid or has been expired")
 	ErrInvalidOTP                ErrorType = errors.New("invalid otp code")
 	ErrRepositoryOTP             ErrorType = errors.New("otp repository internal error")
+	ErrRepositoryAuth            ErrorType = errors.New("auth repository internal error")
 	ErrInvalidCredential         ErrorType = errors.New("wrong username or password")
+	ErrInvalidPassword           ErrorType = errors.New("invalid password")
 )
 
 var (
@@ -78,6 +80,7 @@ var (
 		ErrInvalidCredential:         InvalidCredential,
 		ErrExpiredOTP:                ExpireOTP,
 		ErrExpiredVerificationOTP:    ExpireOTPVerification,
+		ErrInvalidPassword:           InvalidPassword,
 	}
 
 	ErrorToBusiness = map[BusinessCode]ErrorType{
@@ -95,5 +98,6 @@ var (
 		InvalidCredential:         ErrInvalidCredential,
 		ExpireOTP:                 ErrExpiredOTP,
 		ExpireOTPVerification:     ErrExpiredVerificationOTP,
+		InvalidPassword:           ErrInvalidPassword,
 	}
 )

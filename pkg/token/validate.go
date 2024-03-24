@@ -36,8 +36,11 @@ func (j *JWT) Validate(token string) (payload Payload, err error) {
 func (j *JWT) CollectPayload(data interface{}) Payload {
 	m := data.(map[string]interface{})
 	customer := Payload{}
-	if id, ok := m["id"].(string); ok {
-		customer.ID = id
+	if ID, ok := m["id"].(string); ok {
+		customer.ID = ID
+	}
+	if userID, ok := m["user_id"].(string); ok {
+		customer.UserID = userID
 	}
 	if roleType, ok := m["role_type"].(string); ok {
 		i, err := strconv.Atoi(roleType)

@@ -10,10 +10,11 @@ import (
 
 type (
 	TokenRetrieval func(r *http.Request) string
+	ContextKey     string
 )
 
-const (
-	claimsKey = "claims"
+var (
+	CONTEXT_CLAIM_KEY ContextKey = "claims"
 )
 
 func TokenFromHeader(r *http.Request) string {
@@ -54,9 +55,16 @@ func GuardAuthenticated(tr ...TokenRetrieval) func(next http.Handler) http.Handl
 			// 	http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			// 	return
 			// }
-
-			ctx := context.WithValue(r.Context(), claimsKey, &token.Payload{ID: payload.ID, RoleType: payload.RoleType})
+			bundle := &token.Payload{ID: payload.ID, UserID: payload.UserID, RoleType: payload.RoleType}
+			ctx := context.WithValue(r.Context(), CONTEXT_CLAIM_KEY, bundle)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}
+}
+
+func GetClaims(r *http.Request) (c *token.Payload) {
+	if value := r.Context().Value(CONTEXT_CLAIM_KEY); value != nil {
+		c = value.(*token.Payload)
+	}
+	return
 }
