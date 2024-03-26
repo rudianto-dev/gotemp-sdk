@@ -28,6 +28,7 @@ const (
 	ExpireOTP                 BusinessCode = 470
 	ExpireOTPVerification     BusinessCode = 471
 	InvalidPassword           BusinessCode = 472
+	InvalidRefreshToken       BusinessCode = 473
 	Undefine                  BusinessCode = 499
 	InternalError             BusinessCode = 500
 	BadGateway                BusinessCode = 502
@@ -66,6 +67,7 @@ var BusinessStatusMessage = map[BusinessCode]BusinessStatusCode{
 	ExpireOTP:                 {Message: "otp not valid or has been expired", HttpStatusCode: http.StatusBadRequest},
 	ExpireOTPVerification:     {Message: "otp verification not valid or has been expired", HttpStatusCode: http.StatusBadRequest},
 	InvalidPassword:           {Message: "invalid password authentication", HttpStatusCode: http.StatusBadRequest},
+	InvalidRefreshToken:       {Message: "invalid refresh token id", HttpStatusCode: http.StatusBadRequest},
 	ServiceUnavailable:        {Message: "service unavailable", HttpStatusCode: http.StatusServiceUnavailable},
 }
 

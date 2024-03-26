@@ -61,6 +61,7 @@ var (
 	ErrRepositoryAuth            ErrorType = errors.New("auth repository internal error")
 	ErrInvalidCredential         ErrorType = errors.New("wrong username or password")
 	ErrInvalidPassword           ErrorType = errors.New("invalid password")
+	ErrInvalidRefreshToken       ErrorType = errors.New("invalid refresh token id")
 )
 
 var (
@@ -81,6 +82,7 @@ var (
 		ErrExpiredOTP:                ExpireOTP,
 		ErrExpiredVerificationOTP:    ExpireOTPVerification,
 		ErrInvalidPassword:           InvalidPassword,
+		ErrInvalidRefreshToken:       InvalidRefreshToken,
 	}
 
 	ErrorToBusiness = map[BusinessCode]ErrorType{
@@ -99,5 +101,6 @@ var (
 		ExpireOTP:                 ErrExpiredOTP,
 		ExpireOTPVerification:     ErrExpiredVerificationOTP,
 		InvalidPassword:           ErrInvalidPassword,
+		InvalidRefreshToken:       ErrInvalidRefreshToken,
 	}
 )

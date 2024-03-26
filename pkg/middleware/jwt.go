@@ -7,16 +7,12 @@ import (
 	"github.com/rudianto-dev/gotemp-sdk/pkg/token"
 )
 
-const (
-	JWTContextKey = "jwt"
-)
-
-func JWT(jw *token.JWT) func(next http.Handler) http.Handler {
+func JWT(j *token.JWT) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
 			var ctx = r.Context()
-			if jw != nil {
-				ctx = context.WithValue(r.Context(), JWTContextKey, jw)
+			if j != nil {
+				ctx = context.WithValue(r.Context(), CONTEXT_JWT_KEY, j)
 			}
 			next.ServeHTTP(w, r.WithContext(ctx))
 		}
@@ -25,5 +21,5 @@ func JWT(jw *token.JWT) func(next http.Handler) http.Handler {
 }
 
 func GetJWT(c context.Context) token.IJWTToken {
-	return c.Value(JWTContextKey).(*token.JWT)
+	return c.Value(CONTEXT_JWT_KEY).(*token.JWT)
 }

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -10,11 +11,6 @@ import (
 
 type (
 	TokenRetrieval func(r *http.Request) string
-	ContextKey     string
-)
-
-var (
-	CONTEXT_CLAIM_KEY ContextKey = "claims"
 )
 
 func TokenFromHeader(r *http.Request) string {
@@ -49,12 +45,13 @@ func GuardAuthenticated(tr ...TokenRetrieval) func(next http.Handler) http.Handl
 				return
 			}
 
-			// redis := jwe.NewDataRedis(GetRedis(r.Context()), GetLogEntry(r))
-			// if token, err := redis.Find(r.Context(), pub.Subject, merchant, pri.DeviceId); err != nil || token != TokenFromHeader(r) {
-			// 	MakeLogEntry("GuardAuthentication - Redis").Error(err)
-			// 	http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
-			// 	return
-			// }
+			cache := GetCache(r.Context())
+			if token, err := cache.Get(r.Context(), fmt.Sprintf("token:%s", payload.ID)); err != nil || token == "" {
+				MakeLogEntry("GuardAuthentication - GetCache").Error(err)
+				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+				return
+			}
+
 			bundle := &token.Payload{ID: payload.ID, UserID: payload.UserID, RoleType: payload.RoleType}
 			ctx := context.WithValue(r.Context(), CONTEXT_CLAIM_KEY, bundle)
 			next.ServeHTTP(w, r.WithContext(ctx))
