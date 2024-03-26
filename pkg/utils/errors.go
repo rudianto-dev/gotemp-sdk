@@ -59,9 +59,11 @@ var (
 	ErrInvalidOTP                ErrorType = errors.New("invalid otp code")
 	ErrRepositoryOTP             ErrorType = errors.New("otp repository internal error")
 	ErrRepositoryAuth            ErrorType = errors.New("auth repository internal error")
+	ErrRepositoryClient          ErrorType = errors.New("client repository internal error")
 	ErrInvalidCredential         ErrorType = errors.New("wrong username or password")
 	ErrInvalidPassword           ErrorType = errors.New("invalid password")
 	ErrInvalidRefreshToken       ErrorType = errors.New("invalid refresh token id")
+	ErrClientIDAlreadyRegistered ErrorType = errors.New("client id already registered")
 )
 
 var (
@@ -83,6 +85,7 @@ var (
 		ErrExpiredVerificationOTP:    ExpireOTPVerification,
 		ErrInvalidPassword:           InvalidPassword,
 		ErrInvalidRefreshToken:       InvalidRefreshToken,
+		ErrClientIDAlreadyRegistered: ClientIDAlreadyRegistered,
 	}
 
 	ErrorToBusiness = map[BusinessCode]ErrorType{
@@ -102,5 +105,6 @@ var (
 		ExpireOTPVerification:     ErrExpiredVerificationOTP,
 		InvalidPassword:           ErrInvalidPassword,
 		InvalidRefreshToken:       ErrInvalidRefreshToken,
+		ClientIDAlreadyRegistered: ErrClientIDAlreadyRegistered,
 	}
 )
