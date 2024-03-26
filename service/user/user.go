@@ -7,26 +7,10 @@ import (
 	"net/http"
 
 	userContract "github.com/rudianto-dev/gotemp-sdk/contract/user"
-	utilContract "github.com/rudianto-dev/gotemp-sdk/contract/util"
 )
 
-func (s *Service) Health(ctx context.Context) (res *utilContract.GetHealthResponse, err error) {
-	route := "/health"
-	execute, err := s.tp.Execute(ctx, http.MethodGet, route, nil)
-	if err != nil {
-		return
-	}
-	var contentByte []byte
-	contentByte, err = json.Marshal(&execute.Content)
-	if err != nil {
-		return
-	}
-	err = json.Unmarshal(contentByte, &res)
-	return
-}
-
 func (s *Service) GetDetail(ctx context.Context, req userContract.GetDetailUserRequest) (res *userContract.GetDetailUserResponse, err error) {
-	route := fmt.Sprintf("/v1/user/%s", req.ID)
+	route := fmt.Sprintf("internal/v1/user/%s", req.ID)
 	execute, err := s.tp.Execute(ctx, http.MethodGet, route, req)
 	if err != nil {
 		return
